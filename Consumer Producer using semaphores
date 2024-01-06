@@ -1,0 +1,60 @@
+#include<stdio.h>
+#include<stdlib.h>
+int mutex=1,full=0;
+int empty=3, x=0;
+void producer()
+{
+    --mutex;
+    ++full;
+    --empty;
+    printf("Producer produces item %d"x);
+    x++
+    ++mutex;
+}
+void consumer()
+{
+    --mutex;
+    --full;
+    ++empty;
+    printf("Consumer consumes item %d",x);
+    x--;
+    ++mutex;
+}
+int main()
+{
+    int n,i;
+    printf("1.Process 1 for producer\n2.Process 2 for consumer\n3.Process 3 for Exit\n");
+    for(i=0;i<n;i++)
+    {
+        printf("Enter your choice\n");
+        scanf("%d",&n);
+        switch(n)
+        {
+            case 1:
+                 if((mutex==1) && (empty!=0))
+                 {
+                     producer();
+                 }
+                 else
+                 {
+                     printf("buffer is full");
+                 }
+                break;
+            case 2:
+                 if((mutex==1) && (full!=0))
+                 {
+                    consumer(); 
+                 }
+                else
+                {
+                    printf("Buffer is empty");
+                }
+                break;
+            case 3:
+                 exit(0);
+                 break;
+            
+        }
+        
+    }
+}
