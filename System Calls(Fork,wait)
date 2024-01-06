@@ -1,0 +1,51 @@
+#include<stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include<sys/wait.h>
+
+int main()
+{
+    pid_t child_pid;
+    char ch[3];
+    child_pid = fork();
+
+    if (child_pid == -1)
+    {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }
+
+    if (child_pid == 0)
+    {
+        printf("Child process (PID %d) is running\n", getpid());
+        // The following line will not be reached as execl replaces the current process
+        // So, the following lines are unreachable
+        abort();
+        execl("/bin/date", "date", NULL);
+        perror("execl");  // This line is added to check if execl fails
+        exit(EXIT_FAILURE);
+    }
+    else
+    {
+        printf("Parent process (PID: %d) is waiting for the child to terminate\n", getpid());
+        int status;
+        waitpid(child_pid, &status, 0);  // Replaced wait with waitpid
+
+        printf("Parent resumes\n");
+
+        if (WIFEXITED(status))
+        {
+            printf("Parent process (PID: %d) with status %d\n", child_pid, WEXITSTATUS(status));
+        }
+        else if (WIFSIGNALED(status))  // Corrected this line
+        {
+            printf("Parent process (PID: %d) terminated due to signal %d\n", child_pid, WTERMSIG(status));
+        }
+        else
+        {
+            printf("Child process (PID: %d) terminated abnormally\n", child_pid);
+        }
+    }
+
+    return 0;
+}
