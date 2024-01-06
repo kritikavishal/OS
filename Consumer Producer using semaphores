@@ -6,7 +6,9 @@ void producer()
 {
     --mutex;
     ++full;
+//increment of full as producer contains no of filled slots
     --empty;
+//decrement of empty as no of empty slots is less
     printf("Producer produces item %d"x);
     x++
     ++mutex;
@@ -57,4 +59,5 @@ int main()
         }
         
     }
+return 0;
 }
